@@ -17,6 +17,7 @@ def create_star(centre, len_to_spike = 100, rot = 0, sides = 5, spike_angle = No
     # If the shape is split into rectangle triangles, what's the angle at the corners?
     half_inner_angle = ((sides - 2) * pi/2)/ sides
 
+    # This is the angle between the centre, a corner, and the spike tip.
     suplementary_corner_angle = pi - (half_inner_angle if spike_angle is None else spike_angle/2)
 
     # half the angle at the end of a star spike
@@ -25,14 +26,14 @@ def create_star(centre, len_to_spike = 100, rot = 0, sides = 5, spike_angle = No
     # Radius of circle in which the spikes will touch
     outer_radius_ratio = (sin(suplementary_corner_angle)/sin(spike_angle))
 
-    # Width calculated via the regular shape
-    # inner_radius = width * (1/(outer_radius_ratio * 2 + 1))
+    # Calculate based on values given.
     inner_radius = len_to_spike / outer_radius_ratio
     outer_radius = len_to_spike
 
     # We want the star to be "standing up" so the first inner corner needs to be pointing down
     threequarters_offset = 3 * pi / 2
 
+    # Do some trig to get each pt as a coordinate, alternate between the inner and outer points.
     for idx, i in enumerate(range(sides * 2)):
         if idx % 2:
             radius = inner_radius
@@ -51,10 +52,8 @@ def main():
     screen = pygame.display.set_mode(size)
     clock = pygame.time.Clock()
 
-    # Pos, rotation, points, angle between spikes
-    pts = create_star((300, 300), 100, 0, 8)
-
-    font = pygame.font.SysFont(pygame.font.get_default_font(), 30)
+    # Pos, dist between centre and spike, rotation, spikes, angle between spikes
+    pts = create_star((300, 300), 100, 0, 5, None)
 
     running = True
     while running:
@@ -62,10 +61,6 @@ def main():
         for e in events:
             if e.type == pygame.QUIT:
                 running = False
-            
-            elif e.type == pygame.KEYDOWN:
-                if e.key == pygame.K_SPACE:
-                    mchange = not mchange
 
         screen.fill((0xffffff))
 
